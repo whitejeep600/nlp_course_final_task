@@ -12,10 +12,14 @@ class ClassificationBert(torch.nn.Module):
         self.bert.to(device)
         self.classification_layer.to(device)
 
-    def forward(self, input_ids: torch.Tensor, attention_mask: torch.Tensor) -> torch.Tensor:
+    def forward(
+        self,
+        input_ids: torch.Tensor,
+        attention_mask: torch.Tensor,
+        token_type_ids: torch.Tensor | None = None,
+    ) -> torch.Tensor:
         bert_output = self.bert(
-            input_ids=input_ids,
-            attention_mask=attention_mask,
+            input_ids=input_ids, attention_mask=attention_mask, token_type_ids=token_type_ids
         )
         pooled = bert_output.pooler_output
         logits = self.classification_layer(pooled)

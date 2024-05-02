@@ -9,7 +9,7 @@ from tqdm import tqdm
 from transformers import AutoTokenizer
 
 from src.constants import EVAL, TRAIN
-from src.datasets.claim_detection_dataset import ClaimDetectionDataset
+from src.datasets.argument_relation_detection_dataset import ArgumentRelationDetectionDataset
 from src.models.classification_bert import ClassificationBert
 from src.training.trainer import Trainer
 from src.utils import get_cuda_device_if_available
@@ -26,11 +26,11 @@ def main(
 ) -> None:
     device = get_cuda_device_if_available()
 
-    model = ClassificationBert(tuned_model_name, 2, device)
+    model = ClassificationBert(tuned_model_name, 3, device)
     tokenizer = AutoTokenizer.from_pretrained(tuned_model_name)
 
-    train_dataset = ClaimDetectionDataset(train_set_json_path, tokenizer)
-    dev_dataset = ClaimDetectionDataset(dev_set_json_path, tokenizer)
+    train_dataset = ArgumentRelationDetectionDataset(train_set_json_path, tokenizer)
+    dev_dataset = ArgumentRelationDetectionDataset(dev_set_json_path, tokenizer)
     train_dataloader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
     dev_dataloader = DataLoader(dev_dataset, batch_size=batch_size, shuffle=True)
 
@@ -52,7 +52,7 @@ def main(
 
 if __name__ == "__main__":
 
-    params = yaml.safe_load(open("params.yaml"))["src.training.claim_detection"]
+    params = yaml.safe_load(open("params.yaml"))["src.training.argument_relation_detection"]
 
     train_set_json_path = Path(params["train_set_json_path"])
     dev_set_json_path = Path(params["dev_set_json_path"])
