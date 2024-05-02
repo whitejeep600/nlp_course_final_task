@@ -5,6 +5,7 @@ __pycache__/
 
 .idea/
 params.yaml
+plots/*
 
 # Distribution / packaging
 .Python

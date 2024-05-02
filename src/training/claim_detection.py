@@ -100,8 +100,8 @@ class Trainer:
             for metric in METRICS:
                 save_path = self.plots_save_path / f"{mode}_{metric}.png"
                 title = f"{mode} {metric}"
-                xs = self.metrics[mode][metric]
-                ys = range(self.epochs_elapsed)
+                ys = self.metrics[mode][metric]
+                xs = range(self.epochs_elapsed)
                 plt.title(title)
                 plt.plot(xs, ys, linewidth=0.5)
                 plt.xlabel("Iteration")
