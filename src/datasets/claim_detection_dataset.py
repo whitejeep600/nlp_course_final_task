@@ -15,8 +15,8 @@ class ClaimDetectionDataset(TextClassificationDataset):
     ):
         with open(json_path, "r") as f:
             data = json.load(f)
-        self.texts = [sample[0] for sample in data]
-        self.labels = [sample[1] for sample in data]
+        self.texts: list[str] = [sample[0] for sample in data]
+        self.labels: list[int] = [sample[1] for sample in data]
         self.tokenizer = tokenizer
 
     def __len__(self):

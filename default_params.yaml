@@ -2,6 +2,7 @@ src.training.claim_detection:
   train_set_json_path: data/task_2.1/train.json
   dev_set_json_path: data/task_2.1/train.json
   tuned_model_name: bert-base-uncased
-  n_epochs: 8
+  n_epochs: 16
   batch_size: 4
-  lr: 1e-4
+  lr: 5e-6
+  plots_save_path: claim_detection_plots/
