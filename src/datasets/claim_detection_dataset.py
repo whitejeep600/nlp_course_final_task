@@ -5,6 +5,8 @@ import torch
 from torch.utils.data import Dataset
 from transformers import PreTrainedTokenizer
 
+from src.constants import ATTENTION_MASK, INPUT_IDS, LABEL
+
 
 class ClaimDetectionDataset(Dataset):
     def __init__(
@@ -31,7 +33,7 @@ class ClaimDetectionDataset(Dataset):
             truncation=True,
         )
         return {
-            "input_ids": tokenized_text["input_ids"].flatten(),
-            "attention_mask": tokenized_text["attention_mask"].flatten(),
-            "label": torch.tensor(label),
+            INPUT_IDS: tokenized_text[INPUT_IDS].flatten(),
+            ATTENTION_MASK: tokenized_text[ATTENTION_MASK].flatten(),
+            LABEL: torch.tensor(label),
         }

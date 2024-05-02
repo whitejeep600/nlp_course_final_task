@@ -5,6 +5,8 @@ import torch
 from torch.utils.data import Dataset
 from transformers import PreTrainedTokenizer
 
+from src.constants import ATTENTION_MASK, INPUT_IDS, LABEL, TOKEN_TYPE_IDS
+
 
 class ArgumentRelationDetectionDataset(Dataset):
     def __init__(
@@ -31,8 +33,8 @@ class ArgumentRelationDetectionDataset(Dataset):
             truncation=True,
         )
         return {
-            "input_ids": tokenized_text["input_ids"].flatten(),
-            "attention_mask": tokenized_text["attention_mask"].flatten(),
-            "token_type_ids": tokenized_text["token_type_ids"].flatten(),
-            "label": torch.tensor(label),
+            INPUT_IDS: tokenized_text[INPUT_IDS].flatten(),
+            ATTENTION_MASK: tokenized_text[ATTENTION_MASK].flatten(),
+            TOKEN_TYPE_IDS: tokenized_text[TOKEN_TYPE_IDS].flatten(),
+            LABEL: torch.tensor(label),
         }
