@@ -23,6 +23,7 @@ class Trainer:
         loss_function: _Loss,
         optimizer: Optimizer,
         plots_save_path: Path,
+        task_name: str,
     ) -> None:
         self.model = model
         self.train_dataloader = train_dataloader
@@ -35,6 +36,7 @@ class Trainer:
         self.metrics: dict[str, dict[str, list[float]]] = {
             mode: {metric: [] for metric in METRICS} for mode in MODES
         }
+        self.task_name = task_name
 
     def iteration(
         self,
@@ -97,7 +99,7 @@ class Trainer:
         for mode in MODES:
             for metric in METRICS:
                 save_path = self.plots_save_path / f"{mode}_{metric}.png"
-                title = f"{mode} {metric}"
+                title = f"{mode} {metric} for {self.task_name}"
                 ys = self.metrics[mode][metric]
                 xs = range(self.epochs_elapsed)
                 plt.title(title)

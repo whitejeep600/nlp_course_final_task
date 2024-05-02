@@ -38,7 +38,14 @@ def main(
     optimizer = AdamW(model.parameters(), lr=lr)
 
     trainer = Trainer(
-        model, train_dataloader, dev_dataloader, device, loss_function, optimizer, plots_save_path
+        model,
+        train_dataloader,
+        dev_dataloader,
+        device,
+        loss_function,
+        optimizer,
+        plots_save_path,
+        "claim detection",
     )
 
     for _ in tqdm(range(n_epochs), desc="Training", position=0):
