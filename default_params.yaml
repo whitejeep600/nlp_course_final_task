@@ -1,17 +1,32 @@
-src.training.claim_detection:
-  train_set_json_path: data/task_2.1/train.json
-  dev_set_json_path: data/task_2.1/dev.json
-  tuned_model_name: bert-base-uncased
-  n_epochs: 8
+src.training.argument_relation_detection_default:   #public score 0.68
+  train_set_json_path: data/task_1/team_train.json
+  dev_set_json_path: data/task_1/team_dev.json
+  test_set_json_path: data/task_1/team_test.json
+  test_set_output_csv_path: plots/argument_relation_detection_default/
+  tuned_model_name: bert-base-chinese
+  n_epochs: 4
   batch_size: 8
-  lr: 1e-6
-  plots_save_path: plots/claim_detection/
+  lr: 3e-5
+  plots_save_path: plots/argument_relation_detection_default/
 
-src.training.argument_relation_detection:
-  train_set_json_path: data/task_2.2/train.json
-  dev_set_json_path: data/task_2.2/dev.json
-  tuned_model_name: bert-base-uncased
+src.training.argument_relation_detection_temp1:   #public score 0.64
+  train_set_json_path: data/task_1/team_train.json
+  dev_set_json_path: data/task_1/team_dev.json
+  test_set_json_path: data/task_1/team_test.json
+  test_set_output_csv_path: plots/argument_relation_detection_temp1/
+  tuned_model_name: bert-base-chinese
   n_epochs: 4
   batch_size: 8
   lr: 1e-5
-  plots_save_path: plots/argument_relation_detection/
+  plots_save_path: plots/argument_relation_detection_temp1/
+
+src.training.argument_relation_detection_sec-bert-base:   #public score 0.52
+  train_set_json_path: data/task_1/team_train.json
+  dev_set_json_path: data/task_1/team_dev.json
+  test_set_json_path: data/task_1/team_test.json
+  test_set_output_csv_path: plots/argument_relation_detection_sec-bert-base/
+  tuned_model_name: nlpaueb/sec-bert-base
+  n_epochs: 4
+  batch_size: 8
+  lr: 3e-5
+  plots_save_path: plots/argument_relation_detection_sec-bert-base/
