@@ -4,7 +4,6 @@ from pathlib import Path
 import torch
 from torch.utils.data import Dataset
 from transformers import PreTrainedTokenizer
-from typing import Optional
 from src.constants import ATTENTION_MASK, INPUT_IDS, LABEL, TOKEN_TYPE_IDS
 
 
@@ -19,11 +18,12 @@ class ArgumentRelationDetectionDataset(Dataset):
             data = json.load(f)
         if task == 'task1':     #The dataset format is different between task1 and task2
             self.texts: list[tuple[str, str]] = [(sample[1], sample[2]) for sample in data]
+            self.labels: list[int] | None = [sample[3] for sample in data] if len(data) > 0 and len(data[0]) > 3 else None
         elif task == 'task2':
             self.texts: list[tuple[str, str]] = [(sample[0], sample[1]) for sample in data]
+            self.labels: list[int] = [sample[2] for sample in data]
         else:
             raise ValueError('You should specify task1 or task2.')
-        self.labels: Optional[list[int]] = [sample[3] for sample in data] if len(data) > 0 and len(data[0]) > 3 else None
         self.tokenizer = tokenizer
 
     def is_test_mode(self) -> bool:
