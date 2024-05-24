@@ -1,17 +1,30 @@
-src.training.claim_detection:
+src.training.argument_relation_detection_task1:
+  task: task1
+  train_set_json_path: data/task_1/team_train.json
+  dev_set_json_path: data/task_1/team_dev.json
+  test_set_json_path: data/task_1/team_test.json
+  test_set_output_csv_path: plots/argument_relation_detection_task1/
+  tuned_model_name: bert-base-chinese
+  n_epochs: 4
+  batch_size: 8
+  lr: 3e-5
+  plots_save_path: plots/argument_relation_detection_task1/
+
+src.training.claim_detection_task2:
   train_set_json_path: data/task_2.1/train.json
   dev_set_json_path: data/task_2.1/dev.json
   tuned_model_name: bert-base-uncased
   n_epochs: 8
   batch_size: 8
   lr: 1e-6
-  plots_save_path: plots/claim_detection/
+  plots_save_path: plots/claim_detection_task2/
 
-src.training.argument_relation_detection:
+src.training.argument_relation_detection_task2:
+  task: task2
   train_set_json_path: data/task_2.2/train.json
   dev_set_json_path: data/task_2.2/dev.json
   tuned_model_name: bert-base-uncased
   n_epochs: 4
   batch_size: 8
   lr: 1e-5
-  plots_save_path: plots/argument_relation_detection/
+  plots_save_path: plots/argument_relation_detection_task2/
