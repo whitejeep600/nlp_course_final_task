@@ -4,7 +4,6 @@ from pathlib import Path
 import torch
 from torch.utils.data import Dataset
 from transformers import PreTrainedTokenizer
-
 from src.constants import ATTENTION_MASK, INPUT_IDS, LABEL, TOKEN_TYPE_IDS
 
 
@@ -13,21 +12,29 @@ class ArgumentRelationDetectionDataset(Dataset):
         self,
         json_path: Path,
         tokenizer: PreTrainedTokenizer,
-        test_mode: bool = False,
+        task: str
     ):
         with open(json_path, "r") as f:
             data = json.load(f)
-        self.texts: list[tuple[str, str]] = [(sample[1], sample[2]) for sample in data]
-        self.labels: list[int] = [sample[3] for sample in data] if not test_mode else None
+        if task == 'task1':     #The dataset format is different between task1 and task2
+            self.texts: list[tuple[str, str]] = [(sample[1], sample[2]) for sample in data]
+            self.labels: list[int] | None = [sample[3] for sample in data] if len(data) > 0 and len(data[0]) > 3 else None
+        elif task == 'task2':
+            self.texts: list[tuple[str, str]] = [(sample[0], sample[1]) for sample in data]
+            self.labels: list[int] = [sample[2] for sample in data]
+        else:
+            raise ValueError('You should specify task1 or task2.')
         self.tokenizer = tokenizer
-        self.test_mode = test_mode
+
+    def is_test_mode(self) -> bool:
+        return self.labels is None
 
     def __len__(self):
         return len(self.texts)
 
     def __getitem__(self, i):
         texts = self.texts[i]
-        label = self.labels[i] if self.labels is not None else None
+        label = self.labels[i] if not self.is_test_mode() else None
         tokenized_text = self.tokenizer(
             *texts,
             return_tensors="pt",
@@ -40,7 +47,9 @@ class ArgumentRelationDetectionDataset(Dataset):
             ATTENTION_MASK: tokenized_text[ATTENTION_MASK].flatten(),
             TOKEN_TYPE_IDS: tokenized_text[TOKEN_TYPE_IDS].flatten(),
         }
-        if not self.test_mode:
+        if not self.is_test_mode():
             data_dict[LABEL] = torch.tensor(label)
         
         return data_dict
+
+    
