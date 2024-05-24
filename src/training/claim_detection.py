@@ -1,3 +1,5 @@
+import os
+import sys
 from pathlib import Path
 
 import torch
@@ -8,6 +10,8 @@ from torch.utils.data import DataLoader
 from tqdm import tqdm
 from transformers import AutoTokenizer
 
+grandparent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))  #get the "src" directory
+sys.path.append(grandparent_dir)
 from src.constants import EVAL, TRAIN
 from src.datasets.claim_detection_dataset import ClaimDetectionDataset
 from src.models.classification_bert import ClassificationBert
@@ -59,7 +63,7 @@ def main(
 
 if __name__ == "__main__":
 
-    params = yaml.safe_load(open("params.yaml"))["src.training.claim_detection"]
+    params = yaml.safe_load(open("default_params.yaml"))["src.training.claim_detection_task2"]
 
     train_set_json_path = Path(params["train_set_json_path"])
     dev_set_json_path = Path(params["dev_set_json_path"])
