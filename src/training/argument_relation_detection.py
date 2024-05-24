@@ -106,7 +106,7 @@ if __name__ == "__main__":
     ####                                                                    ####
     
     config_name = "src.training.argument_relation_detection_task1"
-    params = yaml.safe_load(open("default_params.yaml"))[config_name]
+    params = yaml.safe_load(open("params.yaml"))[config_name]
 
     task = str(params["task"])
     train_set_json_path = Path(params["train_set_json_path"])
