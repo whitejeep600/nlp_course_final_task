@@ -1,14 +1,15 @@
+import csv
 from pathlib import Path
+from typing import List
+
 import torch
 import yaml
-import csv
-from typing import List
 from torch import nn
 from torch.nn import CrossEntropyLoss
 from torch.optim import AdamW
 from torch.utils.data import DataLoader
 from tqdm import tqdm
-from transformers import BertTokenizerFast, AutoTokenizer
+from transformers import AutoTokenizer, BertTokenizerFast
 
 from src.constants import EVAL, TRAIN
 from src.datasets.argument_relation_detection_dataset import ArgumentRelationDetectionDataset
@@ -16,11 +17,12 @@ from src.models.classification_bert import ClassificationBert
 from src.training.trainer import Trainer
 from src.utils import get_cuda_device_if_available
 
+
 def make_prediction(
     test_dataloader: DataLoader,
     trained_model: nn.Module,
     device: torch.device,
-    output_csv_file: str,
+    output_csv_file: Path,
 ) -> None:
     trained_model.eval()
     test_predictions: List[int] = []
@@ -40,19 +42,20 @@ def make_prediction(
         predicted_classes = torch.argmax(probabilities, dim=1)
         test_predictions += predicted_classes.cpu().tolist()
 
-    with open(output_csv_file, mode='w', newline='') as file:
-        fieldnames = ['ID', 'y_pred']
+    with open(output_csv_file, mode="w", newline="") as file:
+        fieldnames = ["ID", "y_pred"]
         writer = csv.DictWriter(file, fieldnames=fieldnames)
         writer.writeheader()
         for i, prediction in enumerate(test_predictions, start=1):
             writer.writerow({"ID": i, "y_pred": prediction})
 
+
 def main(
     task: str,
     train_set_json_path: Path,
     dev_set_json_path: Path,
-    test_set_json_path: Path|None,
-    test_set_output_csv_path: Path|None,
+    test_set_json_path: Path | None,
+    test_set_output_csv_path: Path | None,
     tuned_model_name: str,
     n_epochs: int,
     batch_size: int,
@@ -62,17 +65,12 @@ def main(
     device = get_cuda_device_if_available()
     model = ClassificationBert(tuned_model_name, 3, device)
     tokenizer = AutoTokenizer.from_pretrained(tuned_model_name)
-    if tuned_model_name == 'ckiplab/bert-base-chinese':      #the author emphasizes it
+    if tuned_model_name == "ckiplab/bert-base-chinese":  # the author emphasizes it
         tokenizer = BertTokenizerFast.from_pretrained(tuned_model_name)
-    test_mode = False
-    test_mode = task == "task1"      #only task1 requires prediction
     train_dataset = ArgumentRelationDetectionDataset(train_set_json_path, tokenizer, task)
     dev_dataset = ArgumentRelationDetectionDataset(dev_set_json_path, tokenizer, task)
     train_dataloader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
     dev_dataloader = DataLoader(dev_dataset, batch_size=batch_size, shuffle=True)
-    if test_mode:
-        test_dataset = ArgumentRelationDetectionDataset(test_set_json_path, tokenizer, task)
-        test_dataloader = DataLoader(test_dataset, batch_size=1, shuffle=False)
 
     loss_function = CrossEntropyLoss()
     optimizer = AdamW(model.parameters(), lr=lr)
@@ -88,7 +86,7 @@ def main(
         "argument relation detection",
     )
 
-    for epoch in tqdm(range(n_epochs), desc="Training", position=0):
+    for _ in tqdm(range(n_epochs), desc="Training", position=0):
 
         trainer.iteration(TRAIN)
         with torch.no_grad():
@@ -96,14 +94,19 @@ def main(
 
     trainer.save_plots()
 
-    if test_mode:
-        output_csv_file = Path(test_set_output_csv_path) / "predictions.csv"
+    # Only task1 requires prediction.
+    if task == "task1" and test_set_json_path is not None and test_set_output_csv_path is not None:
+        test_dataset = ArgumentRelationDetectionDataset(test_set_json_path, tokenizer, task)
+        test_dataloader = DataLoader(test_dataset, batch_size=1, shuffle=False)
+        output_csv_file = test_set_output_csv_path / "predictions.csv"
         output_csv_file.parent.mkdir(parents=True, exist_ok=True)
         make_prediction(test_dataloader, trainer.model, device, output_csv_file)
 
+
 if __name__ == "__main__":
 
-    config_name = "src.training.argument_relation_detection_task1"  #change this to alternate between task1 and task2
+    # Change this to alternate between task1 and task2.
+    config_name = "src.training.argument_relation_detection_task2"
     params = yaml.safe_load(open("params.yaml"))[config_name]
 
     task = str(params["task"])
@@ -129,5 +132,3 @@ if __name__ == "__main__":
         lr=lr,
         plots_save_path=plots_save_path,
     )
-
-    
