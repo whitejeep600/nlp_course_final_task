@@ -59,7 +59,7 @@ def main(
 
 if __name__ == "__main__":
 
-    params = yaml.safe_load(open("params.yaml"))["src.training.claim_detection"]
+    params = yaml.safe_load(open("params.yaml"))["src.training.claim_detection_task2"]
 
     train_set_json_path = Path(params["train_set_json_path"])
     dev_set_json_path = Path(params["dev_set_json_path"])
