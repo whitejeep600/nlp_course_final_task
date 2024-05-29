@@ -113,7 +113,9 @@ if __name__ == "__main__":
     train_set_json_path = Path(params["train_set_json_path"])
     dev_set_json_path = Path(params["dev_set_json_path"])
     test_set_json_path = params.get("test_set_json_path", None)
-    test_set_output_csv_path = params.get("test_set_output_csv_path", None)
+    test_set_output_csv_path = (
+        Path(params["test_set_output_csv_path"]) if "test_set_output_csv_path" in params else None
+    )
     tuned_model_name = params["tuned_model_name"]
     n_epochs = int(params["n_epochs"])
     batch_size = int(params["batch_size"])
