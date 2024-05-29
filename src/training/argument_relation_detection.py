@@ -98,7 +98,7 @@ def main(
     if task == "task1" and test_set_json_path is not None and test_set_output_csv_path is not None:
         test_dataset = ArgumentRelationDetectionDataset(test_set_json_path, tokenizer, task)
         test_dataloader = DataLoader(test_dataset, batch_size=1, shuffle=False)
-        output_csv_file = test_set_output_csv_path / "predictions.csv"
+        output_csv_file = Path(test_set_output_csv_path) / "predictions.csv"
         output_csv_file.parent.mkdir(parents=True, exist_ok=True)
         make_prediction(test_dataloader, trainer.model, device, output_csv_file)
 
