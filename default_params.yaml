@@ -4,10 +4,10 @@ src.training.argument_relation_detection_task1:
   dev_set_json_path: data/task_1/team_dev.json
   test_set_json_path: data/task_1/team_test.json
   test_set_output_csv_path: plots/argument_relation_detection_task1/
-  tuned_model_name: bert-base-chinese
+  tuned_model_name: hfl/chinese-roberta-wwm-ext-large
   n_epochs: 4
-  batch_size: 8
-  lr: 3e-5
+  batch_size: 4
+  lr: 1e-6
   plots_save_path: plots/argument_relation_detection_task1/
 
 src.training.argument_relation_detection_task2:
