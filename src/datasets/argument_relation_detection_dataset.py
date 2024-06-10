@@ -9,7 +9,7 @@ from src.constants import ATTENTION_MASK, INPUT_IDS, LABEL, TOKEN_TYPE_IDS
 
 
 class ArgumentRelationDetectionDataset(Dataset):
-    def __init__(self, json_path: Path, tokenizer: PreTrainedTokenizer, task: str, max_length: int = 128):
+    def __init__(self, json_path: Path, tokenizer: PreTrainedTokenizer, task: str, max_length: int = 256):
         with open(json_path, "r") as f:
             data = json.load(f)
         if task == "task1":  # The dataset format is different between task1 and task2
